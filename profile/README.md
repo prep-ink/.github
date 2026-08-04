@@ -1,7 +1,7 @@
 # Prep Ink
 
-Prep Ink builds AI-native tools for PTE preparation, practice, and assessment.
+Prep Ink builds AI-native learning tools for practice, feedback, and assessment.
 
-We focus on practical learning workflows: question practice, mock-test preparation, score interpretation, feedback, and the infrastructure needed to support reliable study products.
+We focus on practical workflows for learners, educators, and exam-preparation teams: question practice, mock tests, score interpretation, feedback, agents, and content operations.
 
-Our goal is to help learners and educators turn test practice into clearer diagnosis, better feedback, and more focused improvement.
+Our goal is to turn learning activity into clearer diagnosis, better guidance, and more focused improvement.
