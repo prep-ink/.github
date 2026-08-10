@@ -1,3 +1,16 @@
+## PR Title
+
+PR 标题必须使用 Conventional Commit 风格：
+
+- `feat: ...`
+- `fix: ...`
+- `docs: ...`
+- `chore: ...`
+- `test: ...`
+- `refactor: ...`
+
+标题前缀必须小写；必要时可使用 scope，例如 `docs(backend): ...`。标题正文应简洁说明本 PR 的实际交付内容。
+
 ## Context
 
 关联的 Issue、用户路径、Epic 或 Milestone 是什么？
