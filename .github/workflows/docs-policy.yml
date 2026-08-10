@@ -1,0 +1,26 @@
+name: Docs Policy
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  docs-policy:
+    name: docs-policy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target repository
+        uses: actions/checkout@v4
+      - name: Checkout organization policy
+        uses: actions/checkout@v4
+        with:
+          repository: prep-ink/.github
+          path: .prep-ink-github
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Check documentation policy
+        run: node .prep-ink-github/.github/scripts/docs-policy-check.mjs
