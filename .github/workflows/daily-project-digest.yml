@@ -1,0 +1,66 @@
+name: Daily Project Digest
+
+on:
+  schedule:
+    # 北京时间每天 09:00 发送；GitHub Actions cron 使用 UTC。
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: '只生成日志，不发送飞书'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+
+permissions:
+  contents: read
+
+jobs:
+  digest:
+    name: Build and send daily project digest
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_OWNER: ${{ vars.PROJECT_OWNER || 'prep-ink' }}
+      PROJECT_NUMBER: ${{ vars.PROJECT_NUMBER || '2' }}
+      PROJECT_NAME: ${{ vars.PROJECT_NAME || '品墨产品交付看板' }}
+      PROJECT_URL: ${{ vars.PROJECT_URL || 'https://github.com/orgs/prep-ink/projects/2' }}
+      PROJECT_ITEM_LIMIT: ${{ vars.PROJECT_ITEM_LIMIT || '100' }}
+      DIGEST_TIME_ZONE: Asia/Shanghai
+      GH_TOKEN: ${{ secrets.GH_PROJECT_TOKEN || github.token }}
+      HAS_PROJECT_TOKEN: ${{ secrets.GH_PROJECT_TOKEN != '' }}
+      FEISHU_BOT_WEBHOOK: ${{ secrets.FEISHU_BOT_WEBHOOK }}
+      HAS_FEISHU_BOT_WEBHOOK: ${{ secrets.FEISHU_BOT_WEBHOOK != '' }}
+      FEISHU_BOT_SECRET: ${{ secrets.FEISHU_BOT_SECRET }}
+      DRY_RUN: ${{ (github.event_name == 'workflow_dispatch' && inputs.dry_run == 'true') || secrets.FEISHU_BOT_WEBHOOK == '' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Verify digest formatter
+        run: node --test .github/scripts/project-digest.test.mjs
+
+      - name: Report GitHub token source
+        run: |
+          if [ "$HAS_PROJECT_TOKEN" = "true" ]; then
+            echo "Using GH_PROJECT_TOKEN."
+          else
+            echo "::warning::GH_PROJECT_TOKEN is not set. Falling back to the default github.token; organization Project or private repository access may fail."
+          fi
+
+      - name: Check required secrets
+        run: |
+          if [ "$HAS_FEISHU_BOT_WEBHOOK" != "true" ]; then
+            echo "::warning::FEISHU_BOT_WEBHOOK is not set. This run will generate the digest only and skip Feishu delivery."
+          fi
+
+      - name: Build and send digest
+        run: node .github/scripts/project-digest.mjs
