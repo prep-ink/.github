@@ -25,6 +25,8 @@ Closes #
 
 已完成哪些测试、构建或人工验证？
 
+- [ ] PR 分支已对齐最新 `main`（例如 `git fetch origin && git rebase origin/main`，或使用 GitHub 的 update branch）。
+- [ ] `light` check 已通过。
 - [ ] `git diff --check`
 - [ ]
 
