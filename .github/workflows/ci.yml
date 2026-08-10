@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  light:
+    name: light
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check whitespace
+        run: git diff --check
+      - name: Check tracked Markdown files
+        run: |
+          while IFS= read -r file; do
+            if [ ! -s "$file" ]; then
+              echo "::error file=$file::Markdown file must not be empty."
+              exit 1
+            fi
+          done < <(git ls-files '*.md')
