@@ -9,7 +9,8 @@ permissions:
 jobs:
   docs-policy:
     name: docs-policy
-    runs-on: ubuntu-latest
+    # 自建 runner（org prep-ink / sw-01），不消耗 GitHub 托管分钟。
+    runs-on: [self-hosted, Linux, X64]
     steps:
       - name: Checkout target repository
         uses: actions/checkout@v4
